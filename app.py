@@ -1,10 +1,11 @@
 import streamlit as st
 import joblib
 import numpy as np
+import pandas as pd
 import os
 
 st.set_page_config(
-    page_title="KAGE DIGITAL DEFENSE",
+    page_title="NetGuard IDS",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -181,7 +182,7 @@ mode_text = "XGBoost — Live Model" if model_loaded else "Demo Mode"
 st.markdown(f"""
 <div class="topbar">
   <div>
-    <div class="logo-name">🛡️ KDD-Kage Digital Defense</div>
+    <div class="logo-name">🛡️ NetGuard IDS</div>
     <div class="logo-sub">intrusion detection system · xgboost binary classifier</div>
   </div>
   <div class="pill">● {mode_text}</div>
@@ -223,17 +224,19 @@ left_btn, _, right_btn = st.columns([2, 3, 2])
 run = left_btn.button("🔍  Analyze Traffic", use_container_width=True, type="primary")
 
 if run:
-    values = np.array([input_values[f[0]] for f in FEATURES]).reshape(1, -1)
+    values = np.array([input_values[f[0]] for f in FEATURES])
+    feature_names = [f[0] for f in FEATURES]
+    df = pd.DataFrame([values], columns=feature_names)
     if model_loaded:
-        pred = int(model.predict(values)[0])
+        pred = int(model.predict(df)[0])
         is_attack = pred == 1
         conf = None
         if hasattr(model, "predict_proba"):
-            proba = model.predict_proba(values)[0]
+            proba = model.predict_proba(df)[0]
             conf = round(float(proba[pred]), 4)
         result = {"label": "ATTACK" if is_attack else "NORMAL", "is_attack": is_attack, "confidence": conf}
     else:
-        result = demo_predict(values[0])
+        result = demo_predict(values)
 
     st.session_state.result = result
     if result["is_attack"]: st.session_state.total_attack += 1
