@@ -5,7 +5,7 @@ import pandas as pd
 import os
 
 st.set_page_config(
-    page_title="NetGuard IDS",
+    page_title="KDD",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -182,7 +182,7 @@ mode_text = "XGBoost — Live Model" if model_loaded else "Demo Mode"
 st.markdown(f"""
 <div class="topbar">
   <div>
-    <div class="logo-name">🛡️ NetGuard IDS</div>
+    <div class="logo-name">🛡️ KDD- Kage Digital Defense</div>
     <div class="logo-sub">intrusion detection system · xgboost binary classifier</div>
   </div>
   <div class="pill">● {mode_text}</div>
